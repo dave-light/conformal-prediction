@@ -5,6 +5,7 @@
 ```python
 import numpy as np
 import math
+import time
 
 ```
 
@@ -137,6 +138,8 @@ def test_error_rate(predictions, actual_labels):
     return np.mean(predictions != actual_labels)
 ```
 
+## Conformity Measure
+
 
 ```python
 def divide(numerator, denominator):
@@ -160,6 +163,9 @@ def divide(numerator, denominator):
     '    if numerator == 0.000:\n        return 0\n    elif denominator == 0.000:\n        return numerator/1\n    else:\n        return numerator/denominator\n'
 
 
+
+## Calculate confirmity scores for entire training set
+Calculate the scores for the whole training set and store them.
 
 
 ```python
@@ -220,6 +226,13 @@ def conformity(neighbours_set, num_features):
 
     return conformity_scores
 ```
+
+## Calculate p-value
+Re-compute conformity score for single test_sample\[label\], the nearest neighbour of the same, and the nearest neighbour of different. 
+
+Rank *test_sample\[label\]*
+
+Return *rank  /  n +1*
 
 
 ```python
@@ -293,6 +306,9 @@ def calculate_p_val(conformity_set, train_set, p_training_set):
     return rank
 ```
 
+## Calculate false p-value
+Sum total p-values and subtract true p-value
+
 
 ```python
 # calculate false p value for each sample
@@ -327,6 +343,7 @@ def p_val(conformity_set, train_set, test_sample, labels_set):
 
 
 ```python
+start = time.time()
 #constants
 num_of_features = len(X_test_iris[0])
 num_of_samples = len(y_test_iris)
@@ -368,23 +385,9 @@ for x in range(len(predictions)):
     temp_p_value += p_val(conformity_set, iris_train_set, iris_test_set[x], labels_set)
 false_p_value = (temp_p_value / len(predictions))
 
-
-'''
-# for all predictions, append p values for all labels
-for x in range(len(predictions)):
-#    p_values.append(predictions[x])
-#    for i in range(len(predictions)):
-     p_values.append([predictions[x], p_val(iris_train_set, iris_test_set[x], labels)])
-
-print(p_values)
-# p_values[x] gives [x (value1, value2, value3)]
-# p_values[x][1] gives (value1, value2, value3)
-# p_values[x][1][2] gives value3
-#conformity_score(predictions[x])
-'''
 #print(temp_p_value)
 print('average false p value '+str(false_p_value))
-
+print(time.time() - start, ' seconds')
 
 ```
 
@@ -392,12 +395,14 @@ print('average false p value '+str(false_p_value))
     test error rate: 0.02631578947368421
     
     average false p value 0.04471355379599442
+    0.1244957447052002  seconds
 
 
 ## IONESPHERE
 
 
 ```python
+start = time.time()
 #constants
 num_of_features = len(X_test[0])
 num_of_samples = len(y_test)
@@ -438,7 +443,7 @@ false_p_value = (temp_p_value / len(predictions))
 
 #print(temp_p_value)
 print('average false p value '+str(false_p_value))
-
+print(time.time() - start, ' seconds')
 
 ```
 
@@ -446,90 +451,5 @@ print('average false p value '+str(false_p_value))
     test error rate: 0.14772727272727273
     
     average false p value 0.041021005509641904
+    2.934255838394165  seconds
 
-
-
-```python
-
-```
-
-
-```python
-""" calculates p-value"""
-
-#takes total number of scores equal or greater. divides by n+1 (training_set + 1)
-
-```
-
-
-
-
-    ' calculates p-value'
-
-
-
-
-```python
-getAllNeighbours(x_)
-```
-
-
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    <ipython-input-20-125700a4156f> in <module>()
-    ----> 1 getAllNeighbours(x_)
-    
-
-    NameError: name 'getAllNeighbours' is not defined
-
-
-## Part 4
-
-Calculate false p-value error rate
-
-
-```python
-# conformity score, nearest different / nearest same
-
-def conformity_score(train_set, test_sample):
-    
-    #add test_sample to train_set
-    training_set = np.empty(train_set.shape)
-    training_set = np.concatenate([train_set, [test_sample]])
-    length = len(training_set)
-    #find distances from sample for all features and add to list in order
-    
-    distances_from_nearest_same = []
-    
-    for x in range(length):
-        if training_set[x][-1] == training_set[x+1][-1]:
-            distance = 0
-            for i in range(len(training_set[i])):
-                distance += ((training_set[i][] - training_set[i][])**2)
-            distances_from_nearest_same.append(math.sqrt(distance))
-            
-    
-    
-    
-    distances_from_nearest_other = []
-
-iris_train_set = knn_fit(X_train_iris, y_train_iris)
-iris_test_set = knn_fit(X_test_iris, y_test_iris)
-conformity_score(iris_train_set, iris_test_set[0])
-    
-    
-    
-    #calculate distances from zero, store sorted
-    
-    #insert test sample (distance from zero) to training set (distances from zero)
-    
-    #find index with closest value to test sample of same class
-
-```
-
-
-```python
-
-```
